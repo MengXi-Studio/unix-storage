@@ -1,0 +1,45 @@
+{
+	"name": "@meng-xi/unix-storage",
+	"type": "module",
+	"version": "0.1.0",
+	"private": false,
+	"description": "为 uni-app x 提供功能完善的本地缓存库",
+	"keywords": [
+		"@meng-xi/unix-storage",
+		"meng-xi",
+		"unix-storage",
+		"uni-app-x",
+		"storage"
+	],
+	"main": "utssdk/index.uts",
+	"module": "utssdk/index.uts",
+	"types": "utssdk/index.uts",
+	"exports": {
+		".": "./utssdk/index.uts"
+	},
+	"files": [
+		"utssdk",
+		"license.md",
+		"README.md",
+		"README-en.md"
+	],
+	"peerDependencies": {
+		"vue": ">=3.0.0"
+	},
+	"peerDependenciesMeta": {
+		"vue": {
+			"optional": true
+		}
+	},
+	"author": {
+		"name": "PedroQue99",
+		"email": "ksmengfang@163.com"
+	},
+	"license": "MIT",
+	"homepage": "https://github.com/MengXi-Studio/unix-storage#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/MengXi-Studio/unix-storage.git"
+	},
+	"bugs": "https://github.com/MengXi-Studio/unix-storage/issues"
+}

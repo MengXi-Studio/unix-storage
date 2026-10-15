@@ -1,0 +1,189 @@
+<template>
+	<scroll-view style="flex:1">
+		<view class="container">
+			<view class="banner">
+				<text class="banner-title">unix-storage 验证页</text>
+				<text class="banner-sub">基础存取 / TTL / 前缀命名空间 / 多实例 / clearExpired / 错误路径</text>
+			</view>
+			<view class="logs">
+				<text class="logs-title">运行结果（console 同步输出 [verify] 前缀日志）</text>
+				<text class="log" v-for="(item, idx) in logs" :key="idx">{{ item }}</text>
+			</view>
+		</view>
+	</scroll-view>
+</template>
+
+<script setup lang="uts">
+	import { ref } from 'vue'
+	import { onReady } from '@dcloudio/uni-app'
+	import { set, get, remove, clear, info, keys, clearExpired, configureStorage, createStorage } from '@/uni_modules/mx-storage'
+	import type { StorageDefaults, StorageError } from '@/uni_modules/mx-storage'
+
+	type VToken = {
+		value: string
+		expire: number | null
+	}
+
+	const logs = ref<Array<string>>([])
+
+	function log(msg: string): void {
+		console.log('[verify] ' + msg)
+		logs.value.push(msg)
+	}
+
+	function errDesc(e: any): string {
+		const err = e as StorageError
+		return 'code=' + err.code + ' subject=' + err.errSubject + ' key=' + (err.key == null ? 'null' : err.key) + ' msg=' + err.errMsg
+	}
+
+	function sleep(ms: number): Promise<void> {
+		return new Promise<void>((resolve) => {
+			setTimeout(() => {
+				resolve()
+			}, ms)
+		})
+	}
+
+	/** G1 基础存取（默认实例开箱即用） */
+	async function testBasic(): Promise<void> {
+		await clear()
+		await set('g1:str', 'hello', null)
+		const s = await get<string>('g1:str')
+		log('G1-1 string 读回=' + (s == null ? 'null' : s))
+		const token: VToken = { value: 'tk-123', expire: null }
+		await set('g1:obj', token, null)
+		const raw = await get<any>('g1:obj')
+		log('G1-2 raw=' + JSON.stringify(raw))
+		const restored = JSON.parse<VToken>(JSON.stringify(raw))
+		log('G1-3 JSON.parse 还原=' + (restored == null ? 'null' : 'value=' + restored.value))
+		const typed = await get<VToken>('g1:obj')
+		log('G1-4 get<VToken>=' + (typed == null ? 'null' : 'value=' + typed.value))
+		await remove('g1:str')
+		const removed = await get<string>('g1:str')
+		log('G1-5 remove 后=' + (removed == null ? 'null（符合预期）' : removed))
+		const missed = await get<string>('g1:not-exists')
+		log('G1-6 未命中=' + (missed == null ? 'null（符合预期）' : missed))
+		const i = await info()
+		log('G1-7 info keys=' + i.keys.length.toString() + ' size=' + i.currentSize.toString() + 'KB limit=' + i.limitSize.toString() + 'KB')
+	}
+
+	/** G2 TTL（调用级 ttl + 实例 defaultTTL 回退） */
+	async function testTTL(): Promise<void> {
+		await set('g2:t1', 'x', 80)
+		const fresh = await get<string>('g2:t1')
+		log('G2-1 ttl=80 立即读=' + (fresh == null ? 'null' : fresh))
+		await sleep(200)
+		const stale = await get<string>('g2:t1')
+		log('G2-2 过期后读=' + (stale == null ? 'null（符合预期）' : stale))
+		const itest = createStorage({ keyPrefix: 'itest:', defaultTTL: 80 } as StorageDefaults)
+		await itest.set('tk', 'v', null)
+		const fresh2 = await itest.get('tk')
+		log('G2-3 实例 defaultTTL 立即读=' + (fresh2 == null ? 'null' : fresh2))
+		await sleep(200)
+		const stale2 = await itest.get('tk')
+		log('G2-4 实例 defaultTTL 过期=' + (stale2 == null ? 'null（符合预期）' : stale2))
+	}
+
+	/** G3 前缀命名空间与多实例隔离 */
+	async function testNamespace(): Promise<void> {
+		const a = createStorage({ keyPrefix: 'nsa:', defaultTTL: null } as StorageDefaults)
+		const b = createStorage({ keyPrefix: 'nsb:', defaultTTL: null } as StorageDefaults)
+		await a.set('k1', 'va', null)
+		await b.set('k2', 'vb', null)
+		const aKeys = await a.keys()
+		log('G3-1 a.keys()=' + aKeys.join(','))
+		const bKeys = await b.keys()
+		log('G3-2 b.keys()=' + bKeys.join(','))
+		const defKeys = await keys()
+		let leaked = false
+		for (let i = 0; i < defKeys.length; i++) {
+			if (defKeys[i] == 'k1' || defKeys[i] == 'k2') {
+				leaked = true
+			}
+		}
+		log('G3-3 默认实例不含 a/b key=' + (leaked ? '泄漏（异常）' : '未泄漏（符合预期）'))
+		await a.clear()
+		const k2After = await b.get('k2')
+		log('G3-4 a.clear() 后 b 数据仍在=' + (k2After == null ? 'null（异常）' : k2After))
+	}
+
+	/** G4 clearExpired 全量扫描（过期清除 + 未过期存活） */
+	async function testClearExpired(): Promise<void> {
+		const exp = createStorage({ keyPrefix: 'exp:', defaultTTL: null } as StorageDefaults)
+		await exp.set('e1', 'v1', 60)
+		await exp.set('e2', 'v2', null)
+		await sleep(200)
+		const count = await exp.clearExpired()
+		log('G4-1 clearExpired 条数=' + count.toString() + (count == 1 ? '（符合预期）' : '（异常）'))
+		const e2 = await exp.get('e2')
+		log('G4-2 未过期记录存活=' + (e2 == null ? 'null（异常）' : e2))
+	}
+
+	/** G5 错误路径（ERR_PARAM fail-fast） */
+	async function testErrors(): Promise<void> {
+		try {
+			await set('', 'x', null)
+			log('G5-1 空 key 未拒绝（异常）')
+		} catch (e) {
+			log('G5-1 空 key 拒绝: ' + errDesc(e))
+		}
+		const bad = createStorage({ keyPrefix: 'uni-bad:', defaultTTL: null } as StorageDefaults)
+		try {
+			await bad.set('k', 'x', null)
+			log('G5-2 保留前缀未拒绝（异常）')
+		} catch (e) {
+			log('G5-2 保留前缀拒绝: ' + errDesc(e))
+		}
+	}
+
+	/** G6 configureStorage 全局默认 TTL（结束恢复内置，不影响后续运行） */
+	async function testConfigure(): Promise<void> {
+		configureStorage({ keyPrefix: null, defaultTTL: 60 } as StorageDefaults)
+		await set('g6:cfg', 'v', null)
+		const fresh = await get<string>('g6:cfg')
+		log('G6-1 全局 defaultTTL 立即读=' + (fresh == null ? 'null' : fresh))
+		await sleep(200)
+		const stale = await get<string>('g6:cfg')
+		log('G6-2 全局 defaultTTL 过期=' + (stale == null ? 'null（符合预期）' : stale))
+		configureStorage({ keyPrefix: null, defaultTTL: null } as StorageDefaults)
+		await set('g6:after', 'v2', null)
+		await sleep(120)
+		const alive = await get<string>('g6:after')
+		log('G6-3 恢复后永不过期=' + (alive == null ? 'null（异常）' : alive))
+	}
+
+	onReady(() => {
+		testBasic()
+			.then(() => testTTL())
+			.then(() => testNamespace())
+			.then(() => testClearExpired())
+			.then(() => testErrors())
+			.then(() => testConfigure())
+			.catch((e) => {
+				const err = e as Error
+				log('意外异常: ' + err.message)
+			})
+	})
+</script>
+
+<style>
+	.banner {
+		flex-direction: column;
+		align-items: center;
+		background-color: #0a7aff;
+		border-radius: 20rpx;
+		padding: 48rpx 0;
+	}
+
+	.banner-title {
+		font-size: 40rpx;
+		font-weight: bold;
+		color: #ffffff;
+	}
+
+	.banner-sub {
+		font-size: 24rpx;
+		color: #d6e9ff;
+		margin-top: 12rpx;
+	}
+</style>

@@ -1,0 +1,73 @@
+<script setup lang="uts">
+	onLaunch(() => {
+		// 全局入口占位：App.uvue 必须含 script 或 template 块
+	})
+</script>
+
+<style>
+	/* 全局样式（App.uvue style 对所有页面生效） */
+	.container {
+		flex: 1;
+		flex-direction: column;
+		padding: 24rpx;
+	}
+
+	.section {
+		font-size: 28rpx;
+		font-weight: bold;
+		color: #1a1a1a;
+		margin: 24rpx 0 12rpx 0;
+	}
+
+	.intro {
+		flex-direction: column;
+		background-color: #ffffff;
+		border-radius: 16rpx;
+		padding: 24rpx;
+	}
+
+	.intro-title {
+		font-size: 28rpx;
+		font-weight: bold;
+		color: #1a1a1a;
+		margin-bottom: 8rpx;
+	}
+
+	.intro-text {
+		font-size: 24rpx;
+		color: #666666;
+	}
+
+	.row {
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+
+	.logs {
+		flex-direction: column;
+		align-self: stretch;
+		margin-top: 16rpx;
+		background-color: #ffffff;
+		border-radius: 16rpx;
+		padding: 20rpx;
+	}
+
+	.logs-head {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 12rpx;
+	}
+
+	.logs-title {
+		font-size: 26rpx;
+		font-weight: bold;
+		color: #1a1a1a;
+	}
+
+	.log {
+		font-size: 22rpx;
+		color: #333333;
+		margin-bottom: 6rpx;
+	}
+</style>
