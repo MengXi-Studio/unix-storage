@@ -26,21 +26,21 @@
 
 ## 安装
 
-**npm**——安装后将包内容同步到工程 `uni_modules/mx-storage/`（编译器不扫描 node_modules）：
+**npm**——安装后将包内容同步到工程 `uni_modules/ux-storage/`（编译器不扫描 node_modules）：
 
 ```bash
 pnpm add @meng-xi/unix-storage
-mkdir -p uni_modules && cp -R node_modules/@meng-xi/unix-storage uni_modules/mx-storage
+mkdir -p uni_modules && cp -R node_modules/@meng-xi/unix-storage uni_modules/ux-storage
 ```
 
-> `packages/core` 为标准 **uni_modules UTS 插件**（`utssdk/` 官方目录结构 + `interface.uts` 对外声明），业务侧从 `@/uni_modules/mx-storage` 导入。
+> `packages/core` 为标准 **uni_modules UTS 插件**（`utssdk/` 官方目录结构 + `interface.uts` 对外声明），业务侧从 `@/uni_modules/ux-storage` 导入。
 
 ## 快速开始
 
 ### 1. 默认实例开箱即用
 
 ```uts
-import { set, get } from '@/uni_modules/mx-storage'
+import { set, get } from '@/uni_modules/ux-storage'
 
 // TTL 1 小时；null = 永不过期（或沿用实例 defaultTTL）
 await set('token', { value: 'xxx' } as TokenInfo, 3600_000)
@@ -55,7 +55,7 @@ const restored = JSON.parse<TokenInfo>(JSON.stringify(token))
 ### 2. TTL 与清理
 
 ```uts
-import { set, get, remove, clearExpired } from '@/uni_modules/mx-storage'
+import { set, get, remove, clearExpired } from '@/uni_modules/ux-storage'
 
 await set('session', data, 60_000) // 60 秒过期
 await get('session') // 过期：惰性移除并返回 null
@@ -67,8 +67,8 @@ await remove('session') // 移除指定 key
 ### 3. 命名空间与多实例
 
 ```uts
-import { keys, clear, createStorage } from '@/uni_modules/mx-storage'
-import type { StorageDefaults } from '@/uni_modules/mx-storage'
+import { keys, clear, createStorage } from '@/uni_modules/ux-storage'
+import type { StorageDefaults } from '@/uni_modules/ux-storage'
 
 await keys() // 本命名空间 key（剥前缀后返回原始 key）
 await clear() // 仅清理本命名空间，不触碰其他数据
@@ -81,8 +81,8 @@ await cacheStore.set('user:1', user, null)
 ### 4. 统一错误处理
 
 ```uts
-import { set } from '@/uni_modules/mx-storage'
-import type { StorageError } from '@/uni_modules/mx-storage'
+import { set } from '@/uni_modules/ux-storage'
+import type { StorageError } from '@/uni_modules/ux-storage'
 
 set('', data, null).catch((err) => {
 	const e = err as StorageError

@@ -26,21 +26,21 @@ With raw `uni.setStorage`, you keep rewriting callback wrappers, expiration hous
 
 ## Installation
 
-**npm** — after installing, sync the package into your project's `uni_modules/mx-storage/` (the compiler does not scan node_modules):
+**npm** — after installing, sync the package into your project's `uni_modules/ux-storage/` (the compiler does not scan node_modules):
 
 ```bash
 pnpm add @meng-xi/unix-storage
-mkdir -p uni_modules && cp -R node_modules/@meng-xi/unix-storage uni_modules/mx-storage
+mkdir -p uni_modules && cp -R node_modules/@meng-xi/unix-storage uni_modules/ux-storage
 ```
 
-> `packages/core` is a standard **uni_modules UTS plugin** (official `utssdk/` layout + `interface.uts` declarations). Import from `@/uni_modules/mx-storage` in your code.
+> `packages/core` is a standard **uni_modules UTS plugin** (official `utssdk/` layout + `interface.uts` declarations). Import from `@/uni_modules/ux-storage` in your code.
 
 ## Quick Start
 
 ### 1. Default instance, ready out of the box
 
 ```uts
-import { set, get } from '@/uni_modules/mx-storage'
+import { set, get } from '@/uni_modules/ux-storage'
 
 // TTL 1 hour; null = never expire (or fall back to the instance defaultTTL)
 await set('token', { value: 'xxx' } as TokenInfo, 3600_000)
@@ -55,7 +55,7 @@ const restored = JSON.parse<TokenInfo>(JSON.stringify(token))
 ### 2. TTL and sweeping
 
 ```uts
-import { set, get, remove, clearExpired } from '@/uni_modules/mx-storage'
+import { set, get, remove, clearExpired } from '@/uni_modules/ux-storage'
 
 await set('session', data, 60_000) // expires in 60s
 await get('session') // expired: lazily removed, resolves null
@@ -67,8 +67,8 @@ await remove('session') // remove a single key
 ### 3. Namespaces and multiple instances
 
 ```uts
-import { keys, clear, createStorage } from '@/uni_modules/mx-storage'
-import type { StorageDefaults } from '@/uni_modules/mx-storage'
+import { keys, clear, createStorage } from '@/uni_modules/ux-storage'
+import type { StorageDefaults } from '@/uni_modules/ux-storage'
 
 await keys() // keys of this namespace (prefix stripped)
 await clear() // only clears this namespace, never touches other data
@@ -81,8 +81,8 @@ await cacheStore.set('user:1', user, null)
 ### 4. Unified error handling
 
 ```uts
-import { set } from '@/uni_modules/mx-storage'
-import type { StorageError } from '@/uni_modules/mx-storage'
+import { set } from '@/uni_modules/ux-storage'
+import type { StorageError } from '@/uni_modules/ux-storage'
 
 set('', data, null).catch((err) => {
 	const e = err as StorageError

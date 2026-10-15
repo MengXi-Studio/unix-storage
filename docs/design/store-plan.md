@@ -7,7 +7,7 @@
 
 ## 1. 定位与范围
 
-**定位**：uni-app x 本地缓存/存储库。npm 包名 `@meng-xi/unix-storage`，uni_modules 插件 id `mx-storage`（对齐 unix-request 的 `@meng-xi/unix-request` / `mx-request` 约定）。
+**定位**：uni-app x 本地缓存/存储库。npm 包名 `@meng-xi/unix-storage`，uni_modules 插件 id `ux-storage`（对齐 unix-request 的 `@meng-xi/unix-request` / `mx-request` 约定）。
 
 **技术底座**：以 `uni.setStorage` 系列 API 为唯一底层依赖，不重造存储栈。库的价值 = 弥补原生 API 在**过期管理、命名规范、异步体验、类型安全**上的不足（store.md 调研结论收敛）。
 
@@ -39,7 +39,7 @@
 | `utssdk/request/{core,instance,shortcut,...}` 实现层 | `utssdk/storage/{core,instance,adapter,ttl,...}` | 实现函数一律 `Impl` 后缀 |
 | `createRequest` / `defaultCore` | `createStorage` / `defaultCore` | 多实例 + 模块级单例 |
 | `RequestError` 统一错误 | `StorageError` | errSubject 固定 `unix-storage` |
-| `scripts/sync-uni-modules.mjs`（dest `mx-request`） | 同名脚本（dest `mx-storage`） | KEEP 逻辑一致 |
+| `scripts/sync-uni-modules.mjs`（dest `mx-request`） | 同名脚本（dest `ux-storage`） | KEEP 逻辑一致 |
 | `packages/playground` + `versions/0.1.0.md` + 双语 README | 同构 | 工程化对齐 |
 
 **存储无平台差异，无需平台目录端**：`uni.setStorage` 系列全端统一（与 `uni.request` 同理，unix-request 也是纯编排层无平台目录）。
@@ -56,7 +56,7 @@ unix-storage/
 ├── versions/
 │   └── 0.1.0.md                    # 发布说明（unix-request 同款）
 ├── scripts/
-│   └── sync-uni-modules.mjs        # core → playground/uni_modules/mx-storage
+│   └── sync-uni-modules.mjs        # core → playground/uni_modules/ux-storage
 ├── packages/
 │   ├── core/                       # @meng-xi/unix-storage（即 uni_modules 插件目录）
 │   │   ├── package.json            # main: utssdk/index.uts
@@ -76,7 +76,7 @@ unix-storage/
 │   └── playground/                 # uni-app x 验证工程
 │       ├── manifest.json / pages.json / main.uts
 │       ├── pages/index/index.uvue  # 验证页面（按功能分组）
-│       └── uni_modules/mx-storage/ # sync 脚本产物（package.json + changelog.md 手工维护）
+│       └── uni_modules/ux-storage/ # sync 脚本产物（package.json + changelog.md 手工维护）
 └── docs/design/                    # 本文档 + store.md
 ```
 
@@ -149,7 +149,7 @@ export const createStorage: CreateStorage = function (defaults: StorageDefaults 
 ### 4.3 使用示例
 
 ```uts
-import { set, get, createStorage } from '@/uni_modules/mx-storage'
+import { set, get, createStorage } from '@/uni_modules/ux-storage'
 
 // 默认实例开箱即用
 await set('token', { value: 'xxx' } as TokenInfo, 3600_000)  // TTL 1 小时
@@ -203,7 +203,7 @@ await cacheStore.set('user:1', user, null)
 | P0 工程初始化 | 根 pnpm-workspace.yaml；packages/core 骨架（package.json / license / 双语 README 占位）；playground 从 unix-request 裁剪 | 可被 HBuilderX 打开的空工程 |
 | P1 Spike | §6 三个验证点，playground 页面实测 | 验证结论写入 LESSONS_LEARNED |
 | P2 core 实现 | interface.uts → index.uts → storage/* 全量实现（类型 → 常量 → adapter → record → ttl → core → instance） | core 完成 |
-| P3 sync 脚本 | 复制 unix-request 脚本改 dest `mx-storage`；playground 侧手工 package.json（id: mx-storage）+ changelog.md | `pnpm sync:uni-modules` 可用 |
+| P3 sync 脚本 | 复制 unix-request 脚本改 dest `ux-storage`；playground 侧手工 package.json（id: ux-storage）+ changelog.md | `pnpm sync:uni-modules` 可用 |
 | P4 运行验证 | playground 验证页按功能分组（基础存取 / TTL / 前缀 / 多实例 / clearExpired / 错误路径）；HBuilderX CLI 运行（先按核心协议 §1.2 解析官方 CLI 文档再构造命令）；**app-android + web 两端**（Q6 结论） | DoD 全勾 |
 | P5 文档收尾 | README / README-en / versions/0.1.0.md / changelog | 可发布状态 |
 
@@ -224,7 +224,7 @@ await cacheStore.set('user:1', user, null)
 | # | 疑问 | 结论 |
 | --- | --- | --- |
 | Q1 | V1 功能范围 | ✅ 锁定：Promise 化 + TTL + 前缀命名空间 + 多实例；LRU / 内存双引擎 / 请求缓存 / pinia 持久化明确不做 |
-| Q2 | 命名三件套 | 按默认：npm `@meng-xi/unix-storage`、插件 id `mx-storage`、errSubject `unix-storage` |
+| Q2 | 命名三件套 | 按默认：npm `@meng-xi/unix-storage`、插件 id `ux-storage`（2026-10-15 由 mx-storage 更名）、errSubject `unix-storage` |
 | Q3 | 同步族 API | ✅ V1 不提供，按需后补 |
 | Q4 | `clear()` 语义 | ✅ 仅清理本命名空间（按 keyPrefix 过滤后逐个 remove） |
 | Q5 | 非本库格式数据处理 | 按默认：原样返回，按无过期处理，不报错 |

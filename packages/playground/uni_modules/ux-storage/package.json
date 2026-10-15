@@ -1,11 +1,11 @@
 {
-	"id": "mx-storage",
-	"displayName": "mx-storage 为 uni-app x 提供功能完善的本地缓存库",
+	"id": "ux-storage",
+	"displayName": "ux-storage 为 uni-app x 提供功能完善的本地缓存库",
 	"version": "0.1.0",
 	"description": "为 uni-app x 提供功能完善的本地缓存库",
 	"keywords": [
 		"unix-storage",
-		"mx-storage",
+		"ux-storage",
 		"storage",
 		"cache",
 		"缓存"

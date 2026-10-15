@@ -16,8 +16,8 @@
 <script setup lang="uts">
 	import { ref } from 'vue'
 	import { onReady } from '@dcloudio/uni-app'
-	import { set, get, remove, clear, info, keys, clearExpired, configureStorage, createStorage } from '@/uni_modules/mx-storage'
-	import type { StorageDefaults, StorageError } from '@/uni_modules/mx-storage'
+	import { set, get, remove, clear, info, keys, clearExpired, configureStorage, createStorage } from '@/uni_modules/ux-storage'
+	import type { StorageDefaults, StorageError } from '@/uni_modules/ux-storage'
 
 	type VToken = {
 		value: string
