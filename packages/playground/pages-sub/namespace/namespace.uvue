@@ -1,0 +1,76 @@
+<template>
+	<scroll-view style="flex:1">
+		<view class="container">
+			<view class="intro">
+				<text class="intro-title">功能说明</text>
+				<text class="intro-text">keyPrefix 命名空间隔离：createStorage 创建的多实例 keys / clear 各自独立，默认实例不感知自定义实例数据，清除一个实例不影响其他实例。进入页面自动运行。</text>
+			</view>
+
+			<text class="section">用例</text>
+			<view class="row">
+				<button size="mini" @click="run">重新运行</button>
+			</view>
+
+			<view class="logs">
+				<view class="logs-head">
+					<text class="logs-title">运行日志（console 同步输出 [verify] 前缀日志）</text>
+					<button size="mini" @click="clearLog">清空</button>
+				</view>
+				<text v-for="(line, index) in logs" :key="index" class="log">{{ line }}</text>
+			</view>
+		</view>
+	</scroll-view>
+</template>
+
+<script setup lang="uts">
+	import { ref } from 'vue'
+	import { onReady } from '@dcloudio/uni-app'
+	import { keys, createStorage } from '@/uni_modules/ux-storage'
+	import type { StorageDefaults } from '@/uni_modules/ux-storage'
+
+	const logs = ref<Array<string>>([])
+
+	function log(msg: string): void {
+		const line = '[verify] ' + msg
+		logs.value.unshift(line)
+		if (logs.value.length > 200) {
+			logs.value.splice(200, logs.value.length - 200)
+		}
+		console.log(line)
+	}
+
+	function clearLog(): void {
+		logs.value.splice(0, logs.value.length)
+	}
+
+	/** G3 前缀命名空间与多实例隔离 */
+	async function run(): Promise<void> {
+		try {
+			const a = createStorage({ keyPrefix: 'nsa:', defaultTTL: null } as StorageDefaults)
+			const b = createStorage({ keyPrefix: 'nsb:', defaultTTL: null } as StorageDefaults)
+			await a.set('k1', 'va', null)
+			await b.set('k2', 'vb', null)
+			const aKeys = await a.keys()
+			log('G3-1 a.keys()=' + aKeys.join(','))
+			const bKeys = await b.keys()
+			log('G3-2 b.keys()=' + bKeys.join(','))
+			const defKeys = await keys()
+			let leaked = false
+			for (let i = 0; i < defKeys.length; i++) {
+				if (defKeys[i] == 'k1' || defKeys[i] == 'k2') {
+					leaked = true
+				}
+			}
+			log('G3-3 默认实例不含 a/b key=' + (leaked ? '泄漏（异常）' : '未泄漏（符合预期）'))
+			await a.clear()
+			const k2After = await b.get('k2')
+			log('G3-4 a.clear() 后 b 数据仍在=' + (k2After == null ? 'null（异常）' : k2After))
+		} catch (e) {
+			log('意外异常: ' + (e as Error).message)
+		}
+	}
+
+	onReady(() => {
+		run()
+	})
+</script>

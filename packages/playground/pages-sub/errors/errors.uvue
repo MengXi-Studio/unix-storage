@@ -1,0 +1,67 @@
+<template>
+	<scroll-view style="flex:1">
+		<view class="container">
+			<view class="intro">
+				<text class="intro-title">功能说明</text>
+				<text class="intro-text">参数校验 fail-fast：空 key 写入、保留前缀（uni- / dcloud_）实例写入均立即拒绝并抛出 StorageError（code=ERR_PARAM），不会触达底层存储。进入页面自动运行。</text>
+			</view>
+
+			<text class="section">用例</text>
+			<view class="row">
+				<button size="mini" @click="run">重新运行</button>
+			</view>
+
+			<view class="logs">
+				<view class="logs-head">
+					<text class="logs-title">运行日志（console 同步输出 [verify] 前缀日志）</text>
+					<button size="mini" @click="clearLog">清空</button>
+				</view>
+				<text v-for="(line, index) in logs" :key="index" class="log">{{ line }}</text>
+			</view>
+		</view>
+	</scroll-view>
+</template>
+
+<script setup lang="uts">
+	import { ref } from 'vue'
+	import { onReady } from '@dcloudio/uni-app'
+	import { set, createStorage } from '@/uni_modules/ux-storage'
+	import type { StorageDefaults } from '@/uni_modules/ux-storage'
+	import { errDesc } from '@/common/test-utils.uts'
+
+	const logs = ref<Array<string>>([])
+
+	function log(msg: string): void {
+		const line = '[verify] ' + msg
+		logs.value.unshift(line)
+		if (logs.value.length > 200) {
+			logs.value.splice(200, logs.value.length - 200)
+		}
+		console.log(line)
+	}
+
+	function clearLog(): void {
+		logs.value.splice(0, logs.value.length)
+	}
+
+	/** G5 错误路径（ERR_PARAM fail-fast） */
+	async function run(): Promise<void> {
+		try {
+			await set('', 'x', null)
+			log('G5-1 空 key 未拒绝（异常）')
+		} catch (e) {
+			log('G5-1 空 key 拒绝: ' + errDesc(e))
+		}
+		const bad = createStorage({ keyPrefix: 'uni-bad:', defaultTTL: null } as StorageDefaults)
+		try {
+			await bad.set('k', 'x', null)
+			log('G5-2 保留前缀未拒绝（异常）')
+		} catch (e) {
+			log('G5-2 保留前缀拒绝: ' + errDesc(e))
+		}
+	}
+
+	onReady(() => {
+		run()
+	})
+</script>

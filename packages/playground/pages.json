@@ -7,6 +7,49 @@
 			}
 		}
 	],
+	"subPackages": [
+		{
+			"root": "pages-sub",
+			"pages": [
+				{
+					"path": "basic/basic",
+					"style": {
+						"navigationBarTitleText": "基础存取"
+					}
+				},
+				{
+					"path": "ttl/ttl",
+					"style": {
+						"navigationBarTitleText": "TTL 过期"
+					}
+				},
+				{
+					"path": "namespace/namespace",
+					"style": {
+						"navigationBarTitleText": "前缀与多实例"
+					}
+				},
+				{
+					"path": "configure/configure",
+					"style": {
+						"navigationBarTitleText": "全局配置"
+					}
+				},
+				{
+					"path": "clear-expired/clear-expired",
+					"style": {
+						"navigationBarTitleText": "清理过期记录"
+					}
+				},
+				{
+					"path": "errors/errors",
+					"style": {
+						"navigationBarTitleText": "错误路径"
+					}
+				}
+			]
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "unix-storage",

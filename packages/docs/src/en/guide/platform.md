@@ -19,7 +19,7 @@ The library treats the native `uni.setStorage` API family as its only underlying
 
 ## Verify it yourself
 
-The repo ships a verification project at [packages/playground](https://github.com/MengXi-Studio/unix-storage/tree/main/packages/playground). Its verification page prints `[verify]` logs in six groups (basic I/O / TTL / namespace / instances / clearExpired / error paths) and runs directly on Web:
+The repo ships a verification project at [packages/playground](https://github.com/MengXi-Studio/unix-storage/tree/main/packages/playground). The home page navigates into six verification pages grouped by feature (basic I/O / TTL / namespaces & instances / global config / clearExpired / error paths); each page auto-runs its checks on open and prints `[verify]` logs. Runs directly on Web:
 
 ```bash
 pnpm install

@@ -113,7 +113,7 @@ set('', data, null).catch((err) => {
 
 ### Verification
 
-The repo ships with a playground [packages/playground](https://github.com/MengXi-Studio/unix-storage/tree/master/packages/playground). Its verification page logs `[verify]` output in six functional groups (basic CRUD / TTL / prefix namespace / multiple instances / clearExpired / error paths), with all 22 checks passing on Web:
+The repo ships with a playground [packages/playground](https://github.com/MengXi-Studio/unix-storage/tree/master/packages/playground). The home page navigates into six verification pages grouped by feature (basic CRUD / TTL / prefix namespace & instances / global config / clearExpired / error paths); each page auto-runs its checks on open and logs `[verify]` output, with all 22 checks passing on Web:
 
 ```bash
 pnpm install

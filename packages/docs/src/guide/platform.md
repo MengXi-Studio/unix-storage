@@ -1,4 +1,4 @@
-﻿# 平台支持
+# 平台支持
 
 库以 `uni.setStorage` 系列原生 API 为唯一底层依赖（全端统一），自身为纯编排层、无平台目录端。UTS 源码分发，由 uni-app x 编译链现场编译：
 
@@ -19,7 +19,7 @@
 
 ## 自助验证
 
-仓库内置验证工程 [packages/playground](https://github.com/MengXi-Studio/unix-storage/tree/main/packages/playground)，验证页按功能分六组输出 `[verify]` 日志（基础存取 / TTL / 前缀命名空间 / 多实例 / clearExpired / 错误路径），Web 端可直接运行：
+仓库内置验证工程 [packages/playground](https://github.com/MengXi-Studio/unix-storage/tree/main/packages/playground)，首页按功能分组导航至六个验证页（基础存取 / TTL / 前缀命名空间与多实例 / 全局配置 / clearExpired / 错误路径），各页进入后自动运行并以 `[verify]` 前缀输出日志，Web 端可直接运行：
 
 ```bash
 pnpm install

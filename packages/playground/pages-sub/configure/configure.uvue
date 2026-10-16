@@ -1,0 +1,70 @@
+<template>
+	<scroll-view style="flex:1">
+		<view class="container">
+			<view class="intro">
+				<text class="intro-title">功能说明</text>
+				<text class="intro-text">configureStorage 修改全局默认（keyPrefix / defaultTTL），对默认实例后续调用生效；本页用例结束后恢复内置默认，避免影响其他页面。进入页面自动运行。</text>
+			</view>
+
+			<text class="section">用例</text>
+			<view class="row">
+				<button size="mini" @click="run">重新运行</button>
+			</view>
+
+			<view class="logs">
+				<view class="logs-head">
+					<text class="logs-title">运行日志（console 同步输出 [verify] 前缀日志）</text>
+					<button size="mini" @click="clearLog">清空</button>
+				</view>
+				<text v-for="(line, index) in logs" :key="index" class="log">{{ line }}</text>
+			</view>
+		</view>
+	</scroll-view>
+</template>
+
+<script setup lang="uts">
+	import { ref } from 'vue'
+	import { onReady } from '@dcloudio/uni-app'
+	import { set, get, configureStorage } from '@/uni_modules/ux-storage'
+	import type { StorageDefaults } from '@/uni_modules/ux-storage'
+	import { sleep } from '@/common/test-utils.uts'
+
+	const logs = ref<Array<string>>([])
+
+	function log(msg: string): void {
+		const line = '[verify] ' + msg
+		logs.value.unshift(line)
+		if (logs.value.length > 200) {
+			logs.value.splice(200, logs.value.length - 200)
+		}
+		console.log(line)
+	}
+
+	function clearLog(): void {
+		logs.value.splice(0, logs.value.length)
+	}
+
+	/** G6 configureStorage 全局默认 TTL（结束恢复内置，不影响后续运行） */
+	async function run(): Promise<void> {
+		try {
+			configureStorage({ keyPrefix: null, defaultTTL: 60 } as StorageDefaults)
+			await set('g6:cfg', 'v', null)
+			const fresh = await get<string>('g6:cfg')
+			log('G6-1 全局 defaultTTL 立即读=' + (fresh == null ? 'null' : fresh))
+			await sleep(200)
+			const stale = await get<string>('g6:cfg')
+			log('G6-2 全局 defaultTTL 过期=' + (stale == null ? 'null（符合预期）' : stale))
+			configureStorage({ keyPrefix: null, defaultTTL: null } as StorageDefaults)
+			await set('g6:after', 'v2', null)
+			await sleep(120)
+			const alive = await get<string>('g6:after')
+			log('G6-3 恢复后永不过期=' + (alive == null ? 'null（异常）' : alive))
+		} catch (e) {
+			log('意外异常: ' + (e as Error).message)
+		}
+	}
+
+	onReady(() => {
+		run()
+	})
+</script>

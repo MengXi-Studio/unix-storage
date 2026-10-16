@@ -113,7 +113,7 @@ set('', data, null).catch((err) => {
 
 ### 运行效果
 
-仓库自带示例工程 [packages/playground](https://github.com/MengXi-Studio/unix-storage/tree/master/packages/playground)，验证页按功能分六组输出 `[verify]` 日志（基础存取 / TTL / 前缀命名空间 / 多实例 / clearExpired / 错误路径），Web 端 22 项全部通过：
+仓库自带示例工程 [packages/playground](https://github.com/MengXi-Studio/unix-storage/tree/master/packages/playground)，首页按功能分组导航至六个验证页（基础存取 / TTL / 前缀命名空间与多实例 / 全局配置 / clearExpired / 错误路径），各页进入后自动运行并以 `[verify]` 前缀输出日志，Web 端 22 项全部通过：
 
 ```bash
 pnpm install

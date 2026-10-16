@@ -1,0 +1,16 @@
+import type { StorageError } from '@/uni_modules/ux-storage'
+
+/** 等待指定毫秒（TTL 过期场景使用） */
+export function sleep(ms: number): Promise<void> {
+	return new Promise<void>((resolve) => {
+		setTimeout(() => {
+			resolve()
+		}, ms)
+	})
+}
+
+/** 统一错误摘要（code / errSubject / key / errMsg） */
+export function errDesc(e: any): string {
+	const err = e as StorageError
+	return 'code=' + err.code + ' subject=' + err.errSubject + ' key=' + (err.key == null ? 'null' : err.key) + ' msg=' + err.errMsg
+}

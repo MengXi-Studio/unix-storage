@@ -1,0 +1,66 @@
+<template>
+	<scroll-view style="flex:1">
+		<view class="container">
+			<view class="intro">
+				<text class="intro-title">功能说明</text>
+				<text class="intro-text">clearExpired 全量扫描当前实例前缀下的记录，清除已过期数据并保留未过期数据，返回清除条数。进入页面自动运行。</text>
+			</view>
+
+			<text class="section">用例</text>
+			<view class="row">
+				<button size="mini" @click="run">重新运行</button>
+			</view>
+
+			<view class="logs">
+				<view class="logs-head">
+					<text class="logs-title">运行日志（console 同步输出 [verify] 前缀日志）</text>
+					<button size="mini" @click="clearLog">清空</button>
+				</view>
+				<text v-for="(line, index) in logs" :key="index" class="log">{{ line }}</text>
+			</view>
+		</view>
+	</scroll-view>
+</template>
+
+<script setup lang="uts">
+	import { ref } from 'vue'
+	import { onReady } from '@dcloudio/uni-app'
+	import { createStorage } from '@/uni_modules/ux-storage'
+	import type { StorageDefaults } from '@/uni_modules/ux-storage'
+	import { sleep } from '@/common/test-utils.uts'
+
+	const logs = ref<Array<string>>([])
+
+	function log(msg: string): void {
+		const line = '[verify] ' + msg
+		logs.value.unshift(line)
+		if (logs.value.length > 200) {
+			logs.value.splice(200, logs.value.length - 200)
+		}
+		console.log(line)
+	}
+
+	function clearLog(): void {
+		logs.value.splice(0, logs.value.length)
+	}
+
+	/** G4 clearExpired 全量扫描（过期清除 + 未过期存活） */
+	async function run(): Promise<void> {
+		try {
+			const exp = createStorage({ keyPrefix: 'exp:', defaultTTL: null } as StorageDefaults)
+			await exp.set('e1', 'v1', 60)
+			await exp.set('e2', 'v2', null)
+			await sleep(200)
+			const count = await exp.clearExpired()
+			log('G4-1 clearExpired 条数=' + count.toString() + (count == 1 ? '（符合预期）' : '（异常）'))
+			const e2 = await exp.get('e2')
+			log('G4-2 未过期记录存活=' + (e2 == null ? 'null（异常）' : e2))
+		} catch (e) {
+			log('意外异常: ' + (e as Error).message)
+		}
+	}
+
+	onReady(() => {
+		run()
+	})
+</script>

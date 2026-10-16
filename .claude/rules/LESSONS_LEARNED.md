@@ -38,3 +38,8 @@
 15. **web 端 `uni.getStorageInfoSync().limitSize` 返回 Number.MAX_VALUE（1.79e308 KB）**：web 无容量上限，`info()` 的 limitSize 平台差异大，业务勿硬编码断言。
 16. **record 探测（detectRecord）**：try-cast UTSJSONObject + `UTSJSONObject.keys()` 探活（keys 长度 0 视为非对象）+ data/expire 双字段判定 + expire try-cast number；web 端 22 条日志实证 record 往返、非 record 原样返回（Q5）、惰性过期、clearExpired 计数全对。
 17. **Web 端验证结论矩阵**：TTL 三级回退（调用级/实例 defaultTTL/configureStorage 全局）、前缀隔离（keys 剥前缀、clear 仅本命名空间、跨实例不泄漏）、错误路径（空 key / 保留前缀均 ERR_PARAM 且 errSubject=unix-storage、key 正确挂载）全部符合 store-plan §4.4 语义。Android 端待设备补测（重点关注：get<VToken> 直接成员访问的 CCE 风险——安全路径为 JSON.parse<T>(JSON.stringify(raw))）。
+
+## 2026-10-16 playground 多页化（首页导航 + pages-sub 六功能页）
+
+18. **uni-app x 5.26 h5 产物默认 history 路由模式**：构建产物内嵌 `router:{mode:"history",base:"/"}`。直接访问 hash URL（`/#/pages-sub/x/x`）会被忽略并剥成无 hash 的 `/` 回落首页；子页正确入口是路径 URL `http://<host>/pages-sub/<name>/<name>`，且静态服务必须开 SPA 回退（`npx serve --single dist/build/h5`，文档/README 已按此写法）。首页 cell `@click + uni.navigateTo` 在 history 模式下浏览器实测跳转正常。
+19. **多页分包结构经 web 链运行验证**：pages.json `subPackages`（root=pages-sub，6 页）+ `common/test-utils.uts` 共享 sleep/errDesc 编译运行均正常；6 页进入自动运行，[verify] 22 项断言（7+4+4+2+2+3）与原单页语义一致。core README 修改后须跑 `pnpm sync:uni-modules` 同步 playground 副本。

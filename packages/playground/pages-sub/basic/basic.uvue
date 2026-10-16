@@ -1,0 +1,80 @@
+<template>
+	<scroll-view style="flex:1">
+		<view class="container">
+			<view class="intro">
+				<text class="intro-title">功能说明</text>
+				<text class="intro-text">默认实例开箱即用：set 写入 / get 读取 / remove 删除 / info 容量信息。对象写入后经 JSON.parse 还原为指定类型；未命中与删除后读取均返回 null。进入页面自动运行。</text>
+			</view>
+
+			<text class="section">用例</text>
+			<view class="row">
+				<button size="mini" @click="run">重新运行</button>
+			</view>
+
+			<view class="logs">
+				<view class="logs-head">
+					<text class="logs-title">运行日志（console 同步输出 [verify] 前缀日志）</text>
+					<button size="mini" @click="clearLog">清空</button>
+				</view>
+				<text v-for="(line, index) in logs" :key="index" class="log">{{ line }}</text>
+			</view>
+		</view>
+	</scroll-view>
+</template>
+
+<script setup lang="uts">
+	import { ref } from 'vue'
+	import { onReady } from '@dcloudio/uni-app'
+	import { set, get, remove, clear, info } from '@/uni_modules/ux-storage'
+
+	type VToken = {
+		value: string
+		expire: number | null
+	}
+
+	const logs = ref<Array<string>>([])
+
+	function log(msg: string): void {
+		const line = '[verify] ' + msg
+		logs.value.unshift(line)
+		if (logs.value.length > 200) {
+			logs.value.splice(200, logs.value.length - 200)
+		}
+		console.log(line)
+	}
+
+	function clearLog(): void {
+		logs.value.splice(0, logs.value.length)
+	}
+
+	/** G1 基础存取（默认实例开箱即用） */
+	async function run(): Promise<void> {
+		try {
+			await clear()
+			await set('g1:str', 'hello', null)
+			const s = await get<string>('g1:str')
+			log('G1-1 string 读回=' + (s == null ? 'null' : s))
+			const token: VToken = { value: 'tk-123', expire: null }
+			await set('g1:obj', token, null)
+			const raw = await get<any>('g1:obj')
+			log('G1-2 raw=' + JSON.stringify(raw))
+			const restored = JSON.parse<VToken>(JSON.stringify(raw))
+			log('G1-3 JSON.parse 还原=' + (restored == null ? 'null' : 'value=' + restored.value))
+			const typed = await get<VToken>('g1:obj')
+			log('G1-4 get<VToken>=' + (typed == null ? 'null' : 'value=' + typed.value))
+			await remove('g1:str')
+			const removed = await get<string>('g1:str')
+			log('G1-5 remove 后=' + (removed == null ? 'null（符合预期）' : removed))
+			const missed = await get<string>('g1:not-exists')
+			log('G1-6 未命中=' + (missed == null ? 'null（符合预期）' : missed))
+			const i = await info()
+			log('G1-7 info keys=' + i.keys.length.toString() + ' size=' + i.currentSize.toString() + 'KB limit=' + i.limitSize.toString() + 'KB')
+		} catch (e) {
+			log('意外异常: ' + (e as Error).message)
+		}
+	}
+
+	onReady(() => {
+		run()
+	})
+</script>

@@ -1,0 +1,71 @@
+<template>
+	<scroll-view style="flex:1">
+		<view class="container">
+			<view class="intro">
+				<text class="intro-title">功能说明</text>
+				<text class="intro-text">TTL 三级回退：调用级 ttl → 实例 defaultTTL → null 永不过期。到期读取惰性过期返回 null。本页实测调用级 ttl 与 createStorage 实例 defaultTTL 两级生效。进入页面自动运行。</text>
+			</view>
+
+			<text class="section">用例</text>
+			<view class="row">
+				<button size="mini" @click="run">重新运行</button>
+			</view>
+
+			<view class="logs">
+				<view class="logs-head">
+					<text class="logs-title">运行日志（console 同步输出 [verify] 前缀日志）</text>
+					<button size="mini" @click="clearLog">清空</button>
+				</view>
+				<text v-for="(line, index) in logs" :key="index" class="log">{{ line }}</text>
+			</view>
+		</view>
+	</scroll-view>
+</template>
+
+<script setup lang="uts">
+	import { ref } from 'vue'
+	import { onReady } from '@dcloudio/uni-app'
+	import { set, get, createStorage } from '@/uni_modules/ux-storage'
+	import type { StorageDefaults } from '@/uni_modules/ux-storage'
+	import { sleep } from '@/common/test-utils.uts'
+
+	const logs = ref<Array<string>>([])
+
+	function log(msg: string): void {
+		const line = '[verify] ' + msg
+		logs.value.unshift(line)
+		if (logs.value.length > 200) {
+			logs.value.splice(200, logs.value.length - 200)
+		}
+		console.log(line)
+	}
+
+	function clearLog(): void {
+		logs.value.splice(0, logs.value.length)
+	}
+
+	/** G2 TTL（调用级 ttl + 实例 defaultTTL 回退） */
+	async function run(): Promise<void> {
+		try {
+			await set('g2:t1', 'x', 80)
+			const fresh = await get<string>('g2:t1')
+			log('G2-1 ttl=80 立即读=' + (fresh == null ? 'null' : fresh))
+			await sleep(200)
+			const stale = await get<string>('g2:t1')
+			log('G2-2 过期后读=' + (stale == null ? 'null（符合预期）' : stale))
+			const itest = createStorage({ keyPrefix: 'itest:', defaultTTL: 80 } as StorageDefaults)
+			await itest.set('tk', 'v', null)
+			const fresh2 = await itest.get('tk')
+			log('G2-3 实例 defaultTTL 立即读=' + (fresh2 == null ? 'null' : fresh2))
+			await sleep(200)
+			const stale2 = await itest.get('tk')
+			log('G2-4 实例 defaultTTL 过期=' + (stale2 == null ? 'null（符合预期）' : stale2))
+		} catch (e) {
+			log('意外异常: ' + (e as Error).message)
+		}
+	}
+
+	onReady(() => {
+		run()
+	})
+</script>
