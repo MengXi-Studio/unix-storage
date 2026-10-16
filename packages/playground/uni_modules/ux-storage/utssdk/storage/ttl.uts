@@ -77,10 +77,10 @@ function scanNext(state: ExpireScanState, onDone: () => void, onFail: (e: Storag
 		removeStorageRaw(key).then((): void => {
 			state.done = state.done + 1
 			scanNext(state, onDone, onFail)
-		}).catch((e: any): void => {
+		}).catch((e: any | null): void => {
 			onFail(e as StorageError)
 		})
-	}).catch((e: any): void => {
+	}).catch((e: any | null): void => {
 		onFail(e as StorageError)
 	})
 }

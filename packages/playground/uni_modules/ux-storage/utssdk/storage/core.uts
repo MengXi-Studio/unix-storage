@@ -36,7 +36,7 @@ export function setImpl(core: StorageCore, key: string, data: any | null, ttl: n
 		const record = buildRecord(data, expire)
 		setStorageRaw(namespacedKey, record).then((): void => {
 			resolve()
-		}).catch((e: any): void => {
+		}).catch((e: any | null): void => {
 			reject(attachKey(e, key))
 		})
 	})
@@ -71,7 +71,7 @@ export function getImpl<T>(core: StorageCore, key: string): Promise<T | null> {
 				// 惰性过期：移除并返回 null（移除失败不阻塞 null 返回）
 				removeStorageRaw(namespacedKey).then((): void => {
 					resolve(null)
-				}).catch((e: any): void => {
+				}).catch((e: any | null): void => {
 					resolve(null)
 				})
 				return
@@ -82,7 +82,7 @@ export function getImpl<T>(core: StorageCore, key: string): Promise<T | null> {
 				return
 			}
 			resolve(dataVal as T)
-		}).catch((e: any): void => {
+		}).catch((e: any | null): void => {
 			reject(attachKey(e, key))
 		})
 	})
@@ -104,7 +104,7 @@ export function removeImpl(core: StorageCore, key: string): Promise<void> {
 		}
 		removeStorageRaw(namespacedKey).then((): void => {
 			resolve()
-		}).catch((e: any): void => {
+		}).catch((e: any | null): void => {
 			reject(attachKey(e, key))
 		})
 	})
@@ -126,7 +126,7 @@ export function clearImpl(core: StorageCore): Promise<void> {
 		const namespaced = listNamespacedKeys(prefix, rawInfo.keys)
 		removeStorageBatchRaw(namespaced).then((): void => {
 			resolve()
-		}).catch((e: any): void => {
+		}).catch((e: any | null): void => {
 			reject(e as StorageError)
 		})
 	})
@@ -187,7 +187,7 @@ export function clearExpiredImpl(core: StorageCore): Promise<number> {
 		const namespaced = listNamespacedKeys(prefix, rawInfo.keys)
 		clearExpiredInKeys(namespaced).then((count: number): void => {
 			resolve(count)
-		}).catch((e: any): void => {
+		}).catch((e: any | null): void => {
 			reject(e as StorageError)
 		})
 	})
@@ -246,8 +246,8 @@ function buildKeyError(code: StorageErrorCode, errMsg: string, rawKey: string): 
 	return result
 }
 
-/** 将底层错误补挂业务原始 key（adapter 层不感知原始 key） */
-function attachKey(e: any, key: string): StorageError {
+/** 将底层错误补挂业务原始 key（adapter 层不感知原始 key；e 实际为 StorageError，null 不会出现） */
+function attachKey(e: any | null, key: string): StorageError {
 	const err = e as StorageError
 	const attached: StorageError = {
 		code: err.code,

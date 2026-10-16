@@ -15,7 +15,10 @@
  */
 import { setImpl, getImpl, removeImpl, clearImpl, infoImpl, keysImpl, clearExpiredImpl } from './storage/core'
 import { defaultCore, setCoreDefaults, createStorageImpl } from './storage/instance'
-import type { StorageDefaults, StorageInfo, ConfigureStorage, CreateStorage } from './interface.uts'
+// StorageInstance 必须在本入口显式 import：createStorage 实现的返回类型标注引用它，
+// Kotlin 生成器只为入口可见类型生成定义，缺失即 compileReleaseKotlin 报
+// Unresolved reference 'StorageInstance'（云打包实证，web 端仅 TS warning 不易察觉）
+import type { StorageDefaults, StorageInfo, StorageInstance, ConfigureStorage, CreateStorage } from './interface.uts'
 
 /**
  * 对外类型转发（同目录 interface.uts，非跨级 re-export）：

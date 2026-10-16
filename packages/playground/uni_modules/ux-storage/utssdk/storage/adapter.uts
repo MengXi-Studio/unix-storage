@@ -16,10 +16,16 @@ import { BUILTIN_NOT_FOUND_MARK } from './constants/defaults'
 
 /** 写入原始 key-value（data 为本库 record 包裹后的值） */
 export function setStorageRaw(key: string, data: any | null): Promise<void> {
+	if (data == null) {
+		// 官方 SetStorageOptions.data 为非空 any（Kotlin Any），写 null 编译不过；
+		// null 写入与移除对读方等价（均返回 null），分流到 removeStorageRaw
+		return removeStorageRaw(key)
+	}
+	const payload: any = data
 	return new Promise<void>((resolve, reject) => {
 		const options: SetStorageOptions = {
 			key: key,
-			data: data,
+			data: payload,
 			success: (): void => {
 				resolve()
 			},
@@ -86,7 +92,7 @@ function removeBatchNext(keys: Array<string>, index: number, onDone: () => void,
 	}
 	removeStorageRaw(keys[index]).then((): void => {
 		removeBatchNext(keys, index + 1, onDone, onFail)
-	}).catch((e: any): void => {
+	}).catch((e: any | null): void => {
 		onFail(e as StorageError)
 	})
 }
