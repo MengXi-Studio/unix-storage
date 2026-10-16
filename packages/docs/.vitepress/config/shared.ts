@@ -24,7 +24,8 @@ export const sharedConfig = defineConfig({
 
 	/** 网站头标签 */
 	head: [
-		['link', { rel: 'icon', type: 'image/svg+xml', href: asset('logo.svg') }],
+		['link', { rel: 'icon', type: 'image/png', href: asset('logo.png') }],
+		['link', { rel: 'icon', href: asset('favicon.ico') }],
 
 		['meta', { property: 'og:type', content: 'website' }],
 		['meta', { property: 'og:title', content: 'Unix Storage' }],
@@ -37,7 +38,7 @@ export const sharedConfig = defineConfig({
 	/** 网站主题配置 */
 	themeConfig: {
 		/** 主题 logo（VitePress 自动拼 base） */
-		logo: '/logo.svg',
+		logo: { src: '/logo.png', alt: 'Unix Storage' },
 
 		/** 本地搜索 */
 		search: {
