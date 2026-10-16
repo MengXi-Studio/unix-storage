@@ -34,7 +34,7 @@ export const enConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
 
 		/** 导航栏 */
 		nav: [
-			{ text: 'Guide', link: '/en/guide/getting-started' },
+			{ text: 'Guide', link: '/en/guide/introduction' },
 			{ text: 'API', link: '/en/api/functions' },
 			{ text: 'Changelog', link: '/en/changelog' },
 			{
@@ -50,11 +50,16 @@ export const enConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
 			'/en/guide/': [
 				{
 					text: 'Getting Started',
-					items: [{ text: 'Quick Start', link: '/en/guide/getting-started' }]
+					items: [
+						{ text: 'Introduction', link: '/en/guide/introduction' },
+						{ text: 'Installation', link: '/en/guide/installation' },
+						{ text: 'Quick Start', link: '/en/guide/getting-started' }
+					]
 				},
 				{
 					text: 'Core Features',
 					items: [
+						{ text: 'Basic Usage', link: '/en/guide/basic-usage' },
 						{ text: 'TTL Expiration', link: '/en/guide/ttl' },
 						{ text: 'Namespaces & Instances', link: '/en/guide/namespace' }
 					]
@@ -63,7 +68,16 @@ export const enConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
 					text: 'Advanced',
 					items: [
 						{ text: 'Error Handling', link: '/en/guide/error-handling' },
+						{ text: 'Type Restoration', link: '/en/guide/type-restoration' },
 						{ text: 'Platform Support', link: '/en/guide/platform' }
+					]
+				},
+				{
+					text: 'Mastery',
+					items: [
+						{ text: 'Implementation Notes', link: '/en/guide/internals' },
+						{ text: 'Best Practices', link: '/en/guide/best-practices' },
+						{ text: 'FAQ', link: '/en/guide/faq' }
 					]
 				}
 			],

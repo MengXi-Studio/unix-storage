@@ -30,7 +30,7 @@ export const zhConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
 
 		/** 导航栏 */
 		nav: [
-			{ text: '指南', link: '/guide/getting-started' },
+			{ text: '指南', link: '/guide/introduction' },
 			{ text: 'API', link: '/api/functions' },
 			{ text: '更新日志', link: '/changelog' },
 			{
@@ -46,11 +46,16 @@ export const zhConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
 			'/guide/': [
 				{
 					text: '入门',
-					items: [{ text: '快速开始', link: '/guide/getting-started' }]
+					items: [
+						{ text: '介绍', link: '/guide/introduction' },
+						{ text: '安装', link: '/guide/installation' },
+						{ text: '快速开始', link: '/guide/getting-started' }
+					]
 				},
 				{
 					text: '核心功能',
 					items: [
+						{ text: '基础用法', link: '/guide/basic-usage' },
 						{ text: 'TTL 过期管理', link: '/guide/ttl' },
 						{ text: '命名空间与多实例', link: '/guide/namespace' }
 					]
@@ -59,7 +64,16 @@ export const zhConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
 					text: '进阶',
 					items: [
 						{ text: '统一错误处理', link: '/guide/error-handling' },
+						{ text: '类型还原', link: '/guide/type-restoration' },
 						{ text: '平台支持', link: '/guide/platform' }
+					]
+				},
+				{
+					text: '精通',
+					items: [
+						{ text: '实现原理', link: '/guide/internals' },
+						{ text: '最佳实践', link: '/guide/best-practices' },
+						{ text: '常见问题', link: '/guide/faq' }
 					]
 				}
 			],

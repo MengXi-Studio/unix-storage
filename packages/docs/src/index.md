@@ -16,6 +16,9 @@ hero:
       text: 快速开始
       link: /guide/getting-started
     - theme: alt
+      text: 介绍
+      link: /guide/introduction
+    - theme: alt
       text: GitHub
       link: https://github.com/MengXi-Studio/unix-storage
 
@@ -28,7 +31,7 @@ features:
     details: record 包裹过期时间戳，读取惰性判断（Date.now() > expire 即移除）；clearExpired 全量扫描返回清理条数；三级回退：调用级 ttl → 实例 defaultTTL → 内置永不过期
   - icon: 🗂️
     title: key 命名空间
-    details: "默认前缀 mx_storage: 规避 uni- / dcloud_ 保留前缀，非法保留前缀以 ERR_PARAM 拦截；keys() 剥前缀返回原始 key；clear 仅清理本命名空间"
+    details: '默认前缀 mx_storage: 规避 uni- / dcloud_ 保留前缀，非法保留前缀以 ERR_PARAM 拦截；keys() 剥前缀返回原始 key；clear 仅清理本命名空间'
   - icon: 🏗️
     title: 多实例
     details: createStorage(defaults) 创建前缀 / TTL 隔离的实例，心智对标 axios.create；默认实例开箱即用，configureStorage 配置全局默认
