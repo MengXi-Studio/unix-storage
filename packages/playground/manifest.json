@@ -1,13 +1,31 @@
 {
 	"name": "unix-storage-playground",
-	"appid": "__UNI__1927897",
-	"description": "@meng-xi/unix-storage 示例项目",
-	"versionName": "0.1.0",
-	"versionCode": "001",
+	"appid": "__UNI__948428E",
+	"description": "",
+	"versionName": "1.0.0",
+	"versionCode": "100",
 	"uni-app-x": {
 		"styleIsolationVersion": "2",
-		"vapor": true,
-		"vapor-render-target": "bytecode"
+		"vapor": true
+	},
+	/* 快应用特有相关 */
+	"quickapp": {},
+	/* 小程序特有相关 */
+	"mp-weixin": {
+		"appid": "",
+		"setting": {
+			"urlCheck": false
+		},
+		"usingComponents": true
+	},
+	"mp-alipay": {
+		"usingComponents": true
+	},
+	"mp-baidu": {
+		"usingComponents": true
+	},
+	"mp-toutiao": {
+		"usingComponents": true
 	},
 	"uniStatistics": {
 		"enable": false
@@ -35,13 +53,8 @@
 				"xxxhdpi": ""
 			},
 			"splashScreens": {
-				"default": {
-					"xhdpi": "",
-					"xxhdpi": "",
-					"xxxhdpi": ""
-				}
-			},
-			"abiFilters": ["armeabi-v7a", "arm64-v8a", "x86_64"]
+				"default": {}
+			}
 		}
 	},
 	"app-ios": {
@@ -49,20 +62,6 @@
 			"modules": {},
 			"icons": {},
 			"splashScreens": {}
-		}
-	},
-	"web": {
-		"router": {
-			"mode": "history"
-		},
-		"title": "@meng-xi/unix-storage",
-		"devServer": {
-			"https": false
-		},
-		"optimization": {
-			"treeShaking": {
-				"enable": true
-			}
 		}
 	}
 }
