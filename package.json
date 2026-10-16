@@ -16,6 +16,9 @@
 	"scripts": {
 		"sync:uni-modules": "node scripts/sync-uni-modules.mjs",
 		"sync:uni-modules:check": "node scripts/sync-uni-modules.mjs --check",
+		"docs:dev": "pnpm --filter @meng-xi/unix-storage-docs dev",
+		"docs:build": "pnpm --filter @meng-xi/unix-storage-docs build",
+		"docs:preview": "pnpm --filter @meng-xi/unix-storage-docs preview",
 		"release": "bumpp",
 		"typecheck": "tsc -p tsconfig.json --noEmit"
 	},
