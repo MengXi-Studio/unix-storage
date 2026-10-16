@@ -8,65 +8,68 @@
 
 			<text class="group-title">基础能力</text>
 			<view class="cell-group">
-				<view class="cell" @click="go('/pages-sub/basic/basic')">
+				<RouterLink to="pages-sub/basic/basic" class="cell">
 					<view class="cell-main">
 						<text class="cell-title">基础存取</text>
 						<text class="cell-desc">set / get / remove / info 开箱即用，未命中返回 null</text>
 					</view>
 					<text class="cell-arrow">›</text>
-				</view>
-				<view class="cell" @click="go('/pages-sub/ttl/ttl')">
+				</RouterLink>
+				<RouterLink to="pages-sub/ttl/ttl" class="cell">
 					<view class="cell-main">
 						<text class="cell-title">TTL 过期</text>
 						<text class="cell-desc">调用级 ttl / 实例 defaultTTL 两级过期实测</text>
 					</view>
 					<text class="cell-arrow">›</text>
-				</view>
+				</RouterLink>
 			</view>
 
 			<text class="group-title">隔离与配置</text>
 			<view class="cell-group">
-				<view class="cell" @click="go('/pages-sub/namespace/namespace')">
+				<RouterLink to="pages-sub/namespace/namespace" class="cell">
 					<view class="cell-main">
 						<text class="cell-title">前缀与多实例</text>
 						<text class="cell-desc">keyPrefix 命名空间隔离，createStorage 多实例互不干扰</text>
 					</view>
 					<text class="cell-arrow">›</text>
-				</view>
-				<view class="cell" @click="go('/pages-sub/configure/configure')">
+				</RouterLink>
+				<RouterLink to="pages-sub/configure/configure" class="cell">
 					<view class="cell-main">
 						<text class="cell-title">全局配置</text>
 						<text class="cell-desc">configureStorage 修改全局默认 TTL，用例结束恢复内置</text>
 					</view>
 					<text class="cell-arrow">›</text>
-				</view>
+				</RouterLink>
 			</view>
 
 			<text class="group-title">维护与错误</text>
 			<view class="cell-group">
-				<view class="cell" @click="go('/pages-sub/clear-expired/clear-expired')">
+				<RouterLink to="pages-sub/clear-expired/clear-expired" class="cell">
 					<view class="cell-main">
 						<text class="cell-title">清理过期记录</text>
 						<text class="cell-desc">clearExpired 扫描清除过期数据，返回清除条数</text>
 					</view>
 					<text class="cell-arrow">›</text>
-				</view>
-				<view class="cell" @click="go('/pages-sub/errors/errors')">
+				</RouterLink>
+				<RouterLink to="pages-sub/errors/errors" class="cell">
 					<view class="cell-main">
 						<text class="cell-title">错误路径</text>
 						<text class="cell-desc">空 key / 保留前缀 ERR_PARAM fail-fast</text>
 					</view>
 					<text class="cell-arrow">›</text>
-				</view>
+				</RouterLink>
 			</view>
 		</view>
 	</scroll-view>
 </template>
 
 <script setup lang="uts">
-	function go(path: string): void {
-		uni.navigateTo({ url: path })
-	}
+	// 页面声明宏：编译期由 @meng-xi/unix-router/vite-plugin 剥离，驱动 pages.json 与路由表生成
+	defineUniPage({
+		title: 'unix-storage',
+		name: 'home'
+	})
+	import { RouterLink } from '@/uni_modules/ux-router/utssdk/index.uts'
 </script>
 
 <style>

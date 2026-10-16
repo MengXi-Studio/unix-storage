@@ -18,15 +18,9 @@
 					}
 				},
 				{
-					"path": "ttl/ttl",
+					"path": "clear-expired/clear-expired",
 					"style": {
-						"navigationBarTitleText": "TTL 过期"
-					}
-				},
-				{
-					"path": "namespace/namespace",
-					"style": {
-						"navigationBarTitleText": "前缀与多实例"
+						"navigationBarTitleText": "清理过期记录"
 					}
 				},
 				{
@@ -36,15 +30,21 @@
 					}
 				},
 				{
-					"path": "clear-expired/clear-expired",
-					"style": {
-						"navigationBarTitleText": "清理过期记录"
-					}
-				},
-				{
 					"path": "errors/errors",
 					"style": {
 						"navigationBarTitleText": "错误路径"
+					}
+				},
+				{
+					"path": "namespace/namespace",
+					"style": {
+						"navigationBarTitleText": "前缀与多实例"
+					}
+				},
+				{
+					"path": "ttl/ttl",
+					"style": {
+						"navigationBarTitleText": "TTL 过期"
 					}
 				}
 			]

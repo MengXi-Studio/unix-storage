@@ -1,0 +1,44 @@
+/**
+ * 本文件由 @meng-xi/unix-router/vite-plugin 自动生成，请勿整体手改。
+ * preserveRouteChanges 已开启：重新生成时保留你追加的自定义字段与整条自定义路由；
+ * 页面级声明请使用页面内的 defineUniPage 宏或 <route-config> 块。
+ */
+import type { RouteConfig, RouteMeta } from '@/uni_modules/ux-router/utssdk/index.uts'
+
+export const routes: RouteConfig[] = [
+	{
+		path: 'pages/index/index',
+		name: 'home',
+		meta: { title: 'unix-storage' },
+	},
+	{
+		path: 'pages-sub/basic/basic',
+		name: 'basic',
+		meta: { title: '基础存取' },
+	},
+	{
+		path: 'pages-sub/clear-expired/clear-expired',
+		name: 'clear-expired',
+		meta: { title: '清理过期记录' },
+	},
+	{
+		path: 'pages-sub/configure/configure',
+		name: 'configure',
+		meta: { title: '全局配置' },
+	},
+	{
+		path: 'pages-sub/errors/errors',
+		name: 'errors',
+		meta: { title: '错误路径' },
+	},
+	{
+		path: 'pages-sub/namespace/namespace',
+		name: 'namespace',
+		meta: { title: '前缀与多实例' },
+	},
+	{
+		path: 'pages-sub/ttl/ttl',
+		name: 'ttl',
+		meta: { title: 'TTL 过期' },
+	},
+]
