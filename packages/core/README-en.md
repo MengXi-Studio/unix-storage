@@ -113,16 +113,9 @@ set('', data, null).catch((err) => {
 
 ### Verification
 
-The repo ships with a playground [packages/playground](https://github.com/MengXi-Studio/unix-storage/tree/master/packages/playground). The home page navigates into six verification pages grouped by feature (basic CRUD / TTL / prefix namespace & instances / global config / clearExpired / error paths); each page auto-runs its checks on open and logs `[verify]` output, with all 22 checks passing on Web:
+The repo ships with a playground [packages/playground](https://github.com/MengXi-Studio/unix-storage/tree/master/packages/playground). The home page navigates into six verification pages grouped by feature (basic CRUD / TTL / prefix namespace & instances / global config / clearExpired / error paths); each page auto-runs its checks on open and logs `[verify]` output, with all 22 checks passing on Web. The playground is a pure HBuilderX project — open `packages/playground` in HBuilderX to publish Web / WeChat Mini Program / Android (cloud packaging) and rerun the same case set.
 
-```bash
-pnpm install
-cd packages/playground
-pnpm build:web
-npx serve --single dist/build/h5
-```
-
-For WeChat Mini Program / Android, open `packages/playground` in HBuilderX and run the same test suite.
+**Android on-device demo**: [download the demo APK](https://mp-b8b8347a-48e9-434d-8302-3e9d99c2cb01.cdn.bspapp.com/cloudstorage/app-build-pkg/1792204322368-__UNI__948428E_1792204316091.apk) — the cloud-packaged build of the playground above; install it to run the full case set on a real device.
 
 ## Community & Support
 

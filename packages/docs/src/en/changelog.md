@@ -16,11 +16,12 @@ First usable version: a local storage library for uni-app x built on the native 
 
 ### Platform support
 
-- **Web**: build verified, all 22 functional verification logs passed (six groups: basic I/O / TTL / namespace / instances / clearExpired / error paths)
-- **WeChat Mini Program / Android**: same codebase for all platforms (the `uni.setStorage` family is unified), pending testing
+- **Web**: build verified, all 22 functional verification logs passed (six verification pages: basic I/O / TTL / namespace & instances / global config / clearExpired / error paths)
+- **Android**: cloud packaging release compiles with zero errors (Kotlin toolchain unblocked); on-device case verification pending
+- **WeChat Mini Program**: same codebase for all platforms (the `uni.setStorage` family is unified), pending testing
 - **iOS / HarmonyOS**: adapted, untested due to environment limits (iOS needs macOS, HarmonyOS needs DevEco Studio)
 
 ### Links
 
-- [Sample project packages/playground](https://github.com/MengXi-Studio/unix-storage/tree/main/packages/playground) (six-group verification page, runs directly on Web)
-- [Design doc docs/design/store.md](https://github.com/MengXi-Studio/unix-storage/tree/main/docs/design)
+- [Sample project packages/playground](https://github.com/MengXi-Studio/unix-storage/tree/master/packages/playground) (home navigation + six feature pages, verified via HBuilderX web publish / cloud packaging)
+- [Design doc docs/design/store.md](https://github.com/MengXi-Studio/unix-storage/tree/master/docs/design)

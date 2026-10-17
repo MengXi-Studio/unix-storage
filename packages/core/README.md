@@ -113,16 +113,9 @@ set('', data, null).catch((err) => {
 
 ### 运行效果
 
-仓库自带示例工程 [packages/playground](https://github.com/MengXi-Studio/unix-storage/tree/master/packages/playground)，首页按功能分组导航至六个验证页（基础存取 / TTL / 前缀命名空间与多实例 / 全局配置 / clearExpired / 错误路径），各页进入后自动运行并以 `[verify]` 前缀输出日志，Web 端 22 项全部通过：
+仓库自带示例工程 [packages/playground](https://github.com/MengXi-Studio/unix-storage/tree/master/packages/playground)，首页按功能分组导航至六个验证页（基础存取 / TTL / 前缀命名空间与多实例 / 全局配置 / clearExpired / 错误路径），各页进入后自动运行并以 `[verify]` 前缀输出日志，Web 端 22 项全部通过。示例工程为纯 HBuilderX 工程，用 HBuilderX 打开 `packages/playground` 即可发行 Web / 微信小程序 / Android（云打包），复验同一组用例。
 
-```bash
-pnpm install
-cd packages/playground
-pnpm build:web
-npx serve --single dist/build/h5
-```
-
-微信小程序 / Android 用 HBuilderX 打开 `packages/playground` 运行，即可复验同一组用例。
+**Android 真机体验**：[下载体验 App（APK）](https://mp-b8b8347a-48e9-434d-8302-3e9d99c2cb01.cdn.bspapp.com/cloudstorage/app-build-pkg/1792204322368-__UNI__948428E_1792204316091.apk)——上述示例工程的云打包产物，安装后即可在真机运行全部用例。
 
 ## 交流与支持
 

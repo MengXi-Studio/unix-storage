@@ -16,11 +16,12 @@
 
 ### 平台支持
 
-- **Web**：编译产物验证通过，22 项功能验证日志全部通过（基础存取 / TTL / 命名空间 / 多实例 / clearExpired / 错误路径六组）
-- **微信小程序 / Android**：代码全端同构（`uni.setStorage` 系列全端统一），待实测
+- **Web**：编译产物验证通过，22 项功能验证日志全部通过（基础存取 / TTL / 命名空间与多实例 / 全局配置 / clearExpired / 错误路径六个验证页）
+- **Android**：云打包 release 编译零错误（Kotlin 编译链打通），真机用例验证待进行
+- **微信小程序**：代码全端同构（`uni.setStorage` 系列全端统一），待实测
 - **iOS / 鸿蒙**：代码已适配，受环境限制暂未实测（iOS 需 macOS、鸿蒙需 DevEco Studio）
 
 ### 相关链接
 
-- [示例项目 packages/playground](https://github.com/MengXi-Studio/unix-storage/tree/main/packages/playground)（六组验证页，Web 端可直接运行）
-- [设计文档 docs/design/store.md](https://github.com/MengXi-Studio/unix-storage/tree/main/docs/design)
+- [示例项目 packages/playground](https://github.com/MengXi-Studio/unix-storage/tree/master/packages/playground)（首页导航 + 六个功能验证页，HBuilderX 发行 Web / 云打包验证）
+- [设计文档 docs/design/store.md](https://github.com/MengXi-Studio/unix-storage/tree/master/docs/design)
